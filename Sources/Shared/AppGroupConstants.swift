@@ -15,6 +15,7 @@ enum StorageKey {
     static let lastUnlockTimestamp = "controltime.lastUnlockTimestamp"
     static let lastSkipResetDate = "controltime.lastSkipResetDate"
     static let isOnboarded = "controltime.isOnboarded"
+    static let monitoringPin = "controltime.monitoringPin"
 }
 
 enum ExerciseType: String, CaseIterable, Codable, Identifiable {

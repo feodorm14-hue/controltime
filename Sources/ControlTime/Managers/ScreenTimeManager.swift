@@ -12,6 +12,7 @@ final class ScreenTimeManager: ObservableObject {
     @Published var isMonitoringActive: Bool
     @Published var graceSkipsRemaining: Int
     @Published var trackedApps: [String]
+    @Published var monitoringPin: String?
 
     private let maxGraceSkips = 4
 
@@ -23,6 +24,7 @@ final class ScreenTimeManager: ObservableObject {
         isMonitoringActive = d.bool(forKey: "controltime.isMonitoringActive")
         graceSkipsRemaining = d.object(forKey: StorageKey.graceSkipsRemaining) as? Int ?? 4
         trackedApps = d.stringArray(forKey: StorageKey.trackedApps) ?? []
+        monitoringPin = d.string(forKey: StorageKey.monitoringPin)
     }
 
     func requestNotificationPermission() async {
@@ -49,6 +51,15 @@ final class ScreenTimeManager: ObservableObject {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         isMonitoringActive = false
         AppGroup.defaults.set(false, forKey: "controltime.isMonitoringActive")
+    }
+
+    func setPin(_ pin: String) {
+        monitoringPin = pin
+        AppGroup.defaults.set(pin, forKey: StorageKey.monitoringPin)
+    }
+
+    func checkPin(_ input: String) -> Bool {
+        input == monitoringPin
     }
 
     func rewardUnlock() {
