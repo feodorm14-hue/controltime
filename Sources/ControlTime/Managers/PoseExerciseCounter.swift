@@ -16,6 +16,7 @@ final class PoseExerciseCounter: NSObject, ObservableObject {
     @Published var isRunning = false
     @Published var cameraAccessDenied = false
     @Published var debugAngle: Double = 0
+    @Published var skeletonPoints: [VNHumanBodyPoseObservation.JointName: CGPoint] = [:]
 
     let session = AVCaptureSession()
     private let output = AVCaptureVideoDataOutput()
@@ -116,6 +117,17 @@ final class PoseExerciseCounter: NSObject, ObservableObject {
 
         guard let observation = req.results?.first else { return }
 
+        let allJoints: [VNHumanBodyPoseObservation.JointName] = [
+            .neck, .leftShoulder, .rightShoulder,
+            .leftElbow, .rightElbow, .leftWrist, .rightWrist,
+            .leftHip, .rightHip, .leftKnee, .rightKnee,
+            .leftAnkle, .rightAnkle,
+        ]
+        var pts: [VNHumanBodyPoseObservation.JointName: CGPoint] = [:]
+        for joint in allJoints {
+            if let p = point(observation, joint) { pts[joint] = p }
+        }
+
         let angle: Double?
         switch exerciseType {
         case .squats:       angle = kneeAngle(from: observation)
@@ -123,11 +135,15 @@ final class PoseExerciseCounter: NSObject, ObservableObject {
         case .jumpingJacks: angle = shoulderAbductionAngle(from: observation)
         }
 
-        guard let a = angle else { return }
+        guard let a = angle else {
+            Task { @MainActor [weak self] in self?.skeletonPoints = pts }
+            return
+        }
 
         Task { @MainActor [weak self] in
             guard let self else { return }
             self.debugAngle = a
+            self.skeletonPoints = pts
             self.updatePhase(angle: a)
         }
     }

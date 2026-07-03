@@ -3,8 +3,8 @@ import SwiftUI
 struct DashboardView: View {
     @EnvironmentObject private var manager: ScreenTimeManager
     @State private var showExercise = false
-    @State private var newAppName = ""
     @State private var showShortcutsGuide = false
+    @State private var showAppPicker = false
 
     var body: some View {
         NavigationStack {
@@ -22,6 +22,10 @@ struct DashboardView: View {
             }
             .sheet(isPresented: $showShortcutsGuide) {
                 ShortcutsGuideSheet()
+            }
+            .sheet(isPresented: $showAppPicker) {
+                AppPickerView(selectedApps: $manager.trackedApps)
+                    .onDisappear { manager.persistSettings() }
             }
         }
     }
@@ -79,35 +83,33 @@ struct DashboardView: View {
 
     private var appsSection: some View {
         Section {
-            ForEach(manager.trackedApps, id: \.self) { app in
+            Button {
+                showAppPicker = true
+            } label: {
                 HStack {
-                    Image(systemName: "app.badge")
+                    Label("Выбрать приложения", systemImage: "app.badge")
+                    Spacer()
+                    Text(manager.trackedApps.isEmpty ? "не выбрано" : "\(manager.trackedApps.count) шт.")
                         .foregroundStyle(.secondary)
-                    Text(app)
                 }
             }
-            .onDelete { indices in
-                manager.trackedApps.remove(atOffsets: indices)
-                manager.persistSettings()
-            }
+            .foregroundStyle(.primary)
 
-            HStack {
-                TextField("Название приложения", text: $newAppName)
-                Button {
-                    let name = newAppName.trimmingCharacters(in: .whitespaces)
-                    guard !name.isEmpty else { return }
-                    manager.trackedApps.append(name)
-                    manager.persistSettings()
-                    newAppName = ""
-                } label: {
-                    Image(systemName: "plus.circle.fill")
+            if !manager.trackedApps.isEmpty {
+                ForEach(manager.trackedApps, id: \.self) { app in
+                    Text(app)
+                        .foregroundStyle(.secondary)
+                        .font(.subheadline)
                 }
-                .disabled(newAppName.trimmingCharacters(in: .whitespaces).isEmpty)
+                .onDelete { indices in
+                    manager.trackedApps.remove(atOffsets: indices)
+                    manager.persistSettings()
+                }
             }
         } header: {
             Text("Приложения под контролем")
         } footer: {
-            Text("Список для памяти — настрой автоматизацию в Shortcuts для каждого.")
+            Text("После выбора настрой автоматизацию в Shortcuts для каждого — кнопка ниже.")
         }
     }
 

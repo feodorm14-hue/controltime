@@ -14,6 +14,10 @@ struct ExerciseView: View {
             CameraPreviewView(session: counter.session)
                 .ignoresSafeArea()
 
+            // Скелет поверх камеры
+            PoseOverlayView(points: counter.skeletonPoints)
+                .ignoresSafeArea()
+
             // Затемнение снизу для удобства чтения текста
             LinearGradient(
                 colors: [.clear, .black.opacity(0.75)],
