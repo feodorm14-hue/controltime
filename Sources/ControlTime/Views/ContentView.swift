@@ -1,19 +1,14 @@
 import SwiftUI
-import FamilyControls
 
 struct ContentView: View {
     @EnvironmentObject private var manager: ScreenTimeManager
+    @AppStorage(StorageKey.isOnboarded) private var isOnboarded = false
 
     var body: some View {
-        Group {
-            if manager.authorizationStatus == .approved {
-                DashboardView()
-            } else {
-                OnboardingView()
-            }
-        }
-        .task {
-            manager.refreshAuthorizationStatus()
+        if isOnboarded {
+            DashboardView()
+        } else {
+            OnboardingView()
         }
     }
 }

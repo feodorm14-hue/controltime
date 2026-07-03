@@ -1,28 +1,20 @@
 import Foundation
-import ManagedSettings
 
 enum AppGroup {
-    static let identifier = "group.com.controltime.app"
-
-    static var defaults: UserDefaults {
-        UserDefaults(suiteName: identifier) ?? .standard
-    }
+    static var defaults: UserDefaults { .standard }
 }
 
 enum StorageKey {
-    static let selection = "controltime.selection"
     static let repsPerInterval = "controltime.repsPerInterval"
     static let intervalMinutes = "controltime.intervalMinutes"
     static let exerciseType = "controltime.exerciseType"
-    static let isShieldedFlag = "controltime.isShielded"
     static let history = "controltime.history"
     static let unlockDeepLinkScheme = "controltime"
     static let graceSkipsRemaining = "controltime.graceSkipsRemaining"
-    static let maxGraceSkips = "controltime.maxGraceSkips"
-}
-
-extension ManagedSettingsStore.Name {
-    static let controlTime: Self = "ControlTimeShield"
+    static let trackedApps = "controltime.trackedApps"
+    static let lastUnlockTimestamp = "controltime.lastUnlockTimestamp"
+    static let lastSkipResetDate = "controltime.lastSkipResetDate"
+    static let isOnboarded = "controltime.isOnboarded"
 }
 
 enum ExerciseType: String, CaseIterable, Codable, Identifiable {

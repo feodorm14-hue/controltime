@@ -36,6 +36,20 @@ struct ExerciseView: View {
                         }
                     }
                     Spacer()
+                    if manager.graceSkipsRemaining > 0 {
+                        Button {
+                            _ = manager.useGraceSkip()
+                            dismiss()
+                        } label: {
+                            Text("Пропустить (\(manager.graceSkipsRemaining))")
+                                .font(.footnote)
+                                .foregroundStyle(.white.opacity(0.8))
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 5)
+                                .background(.ultraThinMaterial)
+                                .clipShape(Capsule())
+                        }
+                    }
                 }
                 .padding()
                 .background(.ultraThinMaterial.opacity(0.7))
@@ -66,7 +80,7 @@ struct ExerciseView: View {
                 .padding(.bottom, 40)
             }
         }
-        .interactiveDismissDisabled(!isDone)
+        .interactiveDismissDisabled(true)
         .statusBarHidden()
         .onAppear {
             counter.start(exerciseType: manager.exerciseType, target: target, onComplete: finish)
