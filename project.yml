@@ -1,0 +1,132 @@
+name: ControlTime
+options:
+  bundleIdPrefix: com.controltime
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: 5.0
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+    TARGETED_DEVICE_FAMILY: "1"
+    CODE_SIGN_STYLE: Automatic
+    # Укажите свой Team ID из Apple Developer, иначе подпись не пройдёт.
+    DEVELOPMENT_TEAM: ""
+
+targets:
+  ControlTime:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources/ControlTime
+      - path: Sources/Shared
+    resources:
+      - Sources/ControlTime/Resources/Assets.xcassets
+    info:
+      path: Sources/ControlTime/Resources/Info.plist
+      properties:
+        CFBundleDisplayName: ControlTime
+        UILaunchScreen: {}
+        NSCameraUsageDescription: "ControlTime использует фронтальную камеру для автоматического подсчёта повторений упражнений через определение позы тела."
+        CFBundleURLTypes:
+          - CFBundleURLSchemes:
+              - controltime
+            CFBundleURLName: com.controltime.app
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    entitlements:
+      path: Sources/ControlTime/ControlTime.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.controltime.app
+        com.apple.developer.family-controls: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.controltime.app
+        INFOPLIST_KEY_UILaunchScreen_Generation: true
+    dependencies:
+      - target: ControlTimeMonitor
+        embed: true
+      - target: ControlTimeShieldConfiguration
+        embed: true
+      - target: ControlTimeShieldAction
+        embed: true
+
+  ControlTimeMonitor:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Sources/ControlTimeMonitor
+      - path: Sources/Shared
+    info:
+      path: Sources/ControlTimeMonitor/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.deviceactivity.monitor-extension
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).DeviceActivityMonitorExtension
+    entitlements:
+      path: Sources/ControlTimeMonitor/ControlTimeMonitor.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.controltime.app
+        com.apple.developer.family-controls: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.controltime.app.monitor
+        SKIP_INSTALL: true
+
+  ControlTimeShieldConfiguration:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Sources/ControlTimeShieldConfiguration
+      - path: Sources/Shared
+    info:
+      path: Sources/ControlTimeShieldConfiguration/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.ManagedSettingsUI.shield-configuration-service
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShieldConfigurationExtension
+    entitlements:
+      path: Sources/ControlTimeShieldConfiguration/ControlTimeShieldConfiguration.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.controltime.app
+        com.apple.developer.family-controls: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.controltime.app.shieldconfiguration
+        SKIP_INSTALL: true
+
+  ControlTimeShieldAction:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Sources/ControlTimeShieldAction
+      - path: Sources/Shared
+    info:
+      path: Sources/ControlTimeShieldAction/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.ManagedSettingsUI.shield-action-service
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShieldActionExtension
+    entitlements:
+      path: Sources/ControlTimeShieldAction/ControlTimeShieldAction.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.controltime.app
+        com.apple.developer.family-controls: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.controltime.app.shieldaction
+        SKIP_INSTALL: true
+
+schemes:
+  ControlTime:
+    build:
+      targets:
+        ControlTime: all
+    run:
+      config: Debug
+    archive:
+      config: Release

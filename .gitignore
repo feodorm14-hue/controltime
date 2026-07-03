@@ -1,0 +1,13 @@
+# Xcode / XcodeGen
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+DerivedData/
+.build/
+*.swiftpm
+
+# macOS
+.DS_Store
+
+# Generated entitlements/plists that XcodeGen writes into Sources are tracked;
+# only project-level generated artifacts above are ignored.
