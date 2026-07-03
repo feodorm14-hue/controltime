@@ -17,6 +17,8 @@ enum StorageKey {
     static let isShieldedFlag = "controltime.isShielded"
     static let history = "controltime.history"
     static let unlockDeepLinkScheme = "controltime"
+    static let graceSkipsRemaining = "controltime.graceSkipsRemaining"
+    static let maxGraceSkips = "controltime.maxGraceSkips"
 }
 
 extension ManagedSettingsStore.Name {

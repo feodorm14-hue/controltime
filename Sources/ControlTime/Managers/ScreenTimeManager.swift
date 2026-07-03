@@ -66,8 +66,8 @@ final class ScreenTimeManager: ObservableObject {
         unshieldAll()
 
         let schedule = DeviceActivitySchedule(
-            intervalStart: DateComponents(hour: 0, minute: 0),
-            intervalEnd: DateComponents(hour: 23, minute: 59),
+            intervalStart: DateComponents(hour: 7, minute: 30),
+            intervalEnd: DateComponents(hour: 22, minute: 0),
             repeats: true
         )
 
