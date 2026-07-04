@@ -103,7 +103,11 @@ final class PoseExerciseCounter: NSObject, ObservableObject {
         if session.canAddOutput(output) { session.addOutput(output) }
 
         if let connection = output.connection(with: .video) {
-            connection.videoRotationAngle = 90
+            if #available(iOS 17.0, *) {
+                connection.videoRotationAngle = 90
+            } else {
+                connection.videoOrientation = .portrait
+            }
         }
 
         session.commitConfiguration()
@@ -111,7 +115,7 @@ final class PoseExerciseCounter: NSObject, ObservableObject {
 
     // MARK: - Pose analysis
 
-    private func analyze(pixelBuffer: CVPixelBuffer) {
+    private nonisolated func analyze(pixelBuffer: CVPixelBuffer) {
         let req = VNDetectHumanBodyPoseRequest()
         try? sequenceHandler.perform([req], on: pixelBuffer, orientation: .right)
 
@@ -213,7 +217,7 @@ final class PoseExerciseCounter: NSObject, ObservableObject {
         let dot = v1.dx * v2.dx + v1.dy * v2.dy
         let mag = sqrt(v1.dx*v1.dx + v1.dy*v1.dy) * sqrt(v2.dx*v2.dx + v2.dy*v2.dy)
         guard mag > 0 else { return 0 }
-        return acos(max(-1, min(1, dot / mag))) * 180 / .pi
+        return Double(acos(Float(max(-1, min(1, dot / mag))))) * 180 / .pi
     }
 }
 

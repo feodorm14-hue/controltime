@@ -68,9 +68,9 @@ struct DashboardView: View {
                 }
             }
         }
-        .onChange(of: manager.intervalMinutes) { _, _ in manager.persistSettings() }
-        .onChange(of: manager.repsPerInterval) { _, _ in manager.persistSettings() }
-        .onChange(of: manager.exerciseType) { _, _ in manager.persistSettings() }
+        .onChange(of: manager.intervalMinutes) { _ in manager.persistSettings() }
+        .onChange(of: manager.repsPerInterval) { _ in manager.persistSettings() }
+        .onChange(of: manager.exerciseType) { _ in manager.persistSettings() }
     }
 
     private var monitoringSection: some View {

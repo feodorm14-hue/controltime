@@ -92,7 +92,7 @@ struct ExerciseView: View {
         .onDisappear {
             counter.stop()
         }
-        .onChange(of: counter.count) { _, _ in checkDone() }
+        .onChange(of: counter.count) { _ in checkDone() }
     }
 
     // MARK: - Sub-views
