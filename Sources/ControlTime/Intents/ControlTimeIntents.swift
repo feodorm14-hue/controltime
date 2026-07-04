@@ -38,6 +38,32 @@ struct UseSkipIntent: AppIntent {
     }
 }
 
+// MARK: - Действие: Проверить — разблокировано ли?
+
+struct IsUnlockedIntent: AppIntent {
+    static var title: LocalizedStringResource = "Упражнение выполнено?"
+    static var description = IntentDescription(
+        "Возвращает ДА если упражнение было выполнено недавно (в рамках текущего интервала). Используй в условии «Если» автоматизации: если НЕТ — запускай «Начать упражнение»."
+    )
+    static var openAppWhenRun = false
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<Bool> {
+        let m = ScreenTimeManager.shared
+        guard m.isMonitoringActive else {
+            return .result(value: true)
+        }
+        let lastUnlock = AppGroup.defaults.double(forKey: StorageKey.lastUnlockTimestamp)
+        guard lastUnlock > 0 else {
+            return .result(value: false)
+        }
+        let elapsed = Date().timeIntervalSince1970 - lastUnlock
+        let intervalSeconds = Double(m.intervalMinutes) * 60
+        let unlocked = elapsed < intervalSeconds
+        return .result(value: unlocked)
+    }
+}
+
 // MARK: - Действие: Статус мониторинга
 
 struct GetStatusIntent: AppIntent {
