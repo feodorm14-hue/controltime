@@ -18,6 +18,9 @@ struct ControlTimeApp: App {
                           url.host == "unlock" else { return }
                     showExercise = true
                 }
+                .onReceive(NotificationCenter.default.publisher(for: .startExerciseFromIntent)) { _ in
+                    showExercise = true
+                }
                 .task {
                     screenTimeManager.resetSkipsIfNewDay()
                     await screenTimeManager.requestNotificationPermission()

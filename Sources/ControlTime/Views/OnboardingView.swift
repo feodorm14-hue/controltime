@@ -25,7 +25,7 @@ struct OnboardingView: View {
 
                         stepRow(number: "1", title: "Настрой интервал", body: "Выбери, как часто ты хочешь делать упражнения — например, каждые 15 минут.")
                         stepRow(number: "2", title: "Включи мониторинг", body: "Приложение будет отправлять уведомление через заданный интервал.")
-                        stepRow(number: "3", title: "Настрой Shortcuts", body: "Добавь автоматизацию: когда открываешь TikTok / Instagram — открыть ControlTime.")
+                        stepRow(number: "3", title: "Настрой Shortcuts", body: "ControlTime уже появился в Shortcuts как готовое действие. Просто добавь автоматизацию: когда открываешь TikTok — запустить «Начать упражнение».")
                         stepRow(number: "4", title: "Занимайся!", body: "Приложение считает повторения через камеру. Засчитал — получил право использовать телефон.")
                     }
                     .padding(.horizontal, 24)
