@@ -98,7 +98,7 @@ final class ScreenTimeManager: ObservableObject {
 
         let trigger = UNTimeIntervalNotificationTrigger(
             timeInterval: Double(intervalMinutes) * 60,
-            repeating: false
+            repeats: false
         )
         let request = UNNotificationRequest(
             identifier: "controltime.exercise",
