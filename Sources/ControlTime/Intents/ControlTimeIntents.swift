@@ -6,13 +6,22 @@ import UIKit
 struct StartExerciseIntent: AppIntent {
     static var title: LocalizedStringResource = "Начать упражнение"
     static var description = IntentDescription(
-        "Открывает экран упражнения в ControlTime. Используй в автоматизации: когда открываешь TikTok/Instagram → запускается это действие."
+        "Используй в автоматизации «Когда открывается приложение». Сам проверяет — нужно ли упражнение. Если недавно выполнено — просто открывает дашборд. Если нет — экран упражнения."
     )
     static var openAppWhenRun = true
 
     @MainActor
     func perform() async throws -> some IntentResult {
-        NotificationCenter.default.post(name: .startExerciseFromIntent, object: nil)
+        let d = AppGroup.defaults
+        let isMonitoring = d.bool(forKey: "controltime.isMonitoringActive")
+        let lastUnlock = d.double(forKey: StorageKey.lastUnlockTimestamp)
+        let intervalMinutes = d.object(forKey: StorageKey.intervalMinutes) as? Int ?? 15
+        let elapsed = Date().timeIntervalSince1970 - lastUnlock
+        let needsExercise = isMonitoring && (lastUnlock == 0 || elapsed >= Double(intervalMinutes) * 60)
+
+        if needsExercise {
+            NotificationCenter.default.post(name: .startExerciseFromIntent, object: nil)
+        }
         return .result()
     }
 }
